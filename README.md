@@ -57,41 +57,24 @@ une feature est regardée :
 setup features par défaut
 
 ```js
-const features = {
+const { Features } = require('afrostream-node-feature');
+const features = new Features({
   'feature': 'variant',
   'afrostream-back-end.config': '{"billings":{"url":"https://billings-api-pr440.herokuapp.com"}}'
-};
-const anf = require('afrostream-node-feature');
-anf.load(features);
-
-(...)
-
-// usage :
-const v = anf.getVariant('feature');
-
-const isFeatureEnabled = anf.isEnabled('feature');
+});
+const variant = features.getVariant('feature');
+const isFeatureEnabled = features.isEnabled('feature');
 ```
 
 recupération des features dynamiques
 
 ```js
-app.use(anf.middleware());
+const { middleware } = require('afrostream-node-feature');
+app.use(middleware(features:features));
 
 app.get('/*', (req, res) => {
-  console.log(req.features);
-
   if (req.features.isEnabled('feature')) {
-
+    // (...)
   }
 })
-```
-
-
-//
-
-
-if (anf.isEnabled('feature')) {
-  // si la feature est active
-
-}
 ```

@@ -22,10 +22,6 @@ class Features {
     Object.assign(this.features, features);
   }
 
-  dup(features) {
-    return new Features(Object.assign({}, this.features, features));
-  }
-
   isEnabled(key) {
     if (typeof this.features[key] === "undefined") {
       console.warn('[WARNING]: unknown feature '+key);
@@ -54,12 +50,42 @@ class Features {
 
 const middleware = function (options) {
   options = options || { };
-  return (req, res, next) => {
+  options.features = options.features || {};
 
+  //
+  const harvestFeaturesInQuery = (req) => {
+    return req.query || {};
+  };
+  const harvestFeaturesInHeaders = (req) => {
+    try {
+      return JSON.parse(req.headers.get('features'));
+    } catch (e) {
+      return {};
+    }
+  };
+
+  return (req, res, next) => {
+    try {
+      const reqFeatures = Object.assign(
+        {},
+        harvestFeaturesInQuery(req),
+        harvestFeaturesInHeaders(req)
+      );
+
+      req.features = new Features();
+      if (options.features instanceof Features) {
+        req.features.load(options.features.features);
+      }
+      req.features.load(reqFeatures);
+    } catch (e) {
+      // should never reach this !
+      console.error('[ERROR]: loading features ' + e.message);
+    }
+    next();
   };
 };
 
 module.exports = {
   Features: Features,
   middleware: middleware
-}
+};

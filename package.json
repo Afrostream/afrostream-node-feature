@@ -4,12 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "lint": "node_modules/.bin/eslint",
     "test": "node_modules/.bin/mocha -b test/*.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "eslint": "^3.11.1",
     "mocha": "^3.2.0"
   },
   "dependencies": {
