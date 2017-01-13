@@ -4,7 +4,8 @@ const { Features, middleware } = require('../index.js');
 
 describe('calling features', () => {
   it('should be able to load features', (done) => {
-    const a = new Features({
+    const a = new Features();
+    a.load({
       a: "true",
       b: "false",
       c: "1",
@@ -13,8 +14,10 @@ describe('calling features', () => {
       i: "undefined",
       j: "null",
       k: "4242",
-      l: "youpi"
-    });
+      l: "youpi",
+      m: "off",
+      n: "on"
+    })
     assert(a.isEnabled('a') === true);
     assert(a.isEnabled('b') === false);
     assert(a.isEnabled('c') === true);
@@ -24,12 +27,15 @@ describe('calling features', () => {
     assert(a.isEnabled('j') === true);
     assert(a.isEnabled('k') === true);
     assert(a.isEnabled('l') === true);
+    assert(a.isEnabled('m') === false);
+    assert(a.isEnabled('n') === true);
     assert(a.isEnabled('unknown') === false);
     done();
   });
 
   it('should be able to get variant', (done) => {
-    const a = new Features({
+    const a = new Features();
+    a.load({
       a: "true",
       b: "false",
       c: "1",
@@ -44,5 +50,7 @@ describe('calling features', () => {
     assert(a.getVariant('b') === "false");
     assert(a.getVariant('unknown') === null);
     done();
-  })
+  });
+
+
 });

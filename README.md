@@ -7,7 +7,7 @@ feature switch handler
 ## Wording
 
 On appelle "Feature" un couple Key/Value tel que le clef Key est une chaine texte de la forme "A.B.C.(...).Z"
- et Value est baptisée "variant" tel qu'une Feature est active si "variant" !== undefined/null/"null"/0/"0"/false/"false"
+ et Value est baptisée "variant" tel qu'une Feature est active si "variant" !== "0"|"false"|"off"
 
 Il existe deux catégories de features:
  - celles pré-embarquées dans l'application (features par défaut)
@@ -16,14 +16,14 @@ Il existe deux catégories de features:
 ## Features par défaut (pré-embarquées)
 
 une feature par défaut est une feature pré-embarquée dans l'application
-on ne peut pas lui appliquer de restrictions par IP ou de % de trafic.
+on peut lui appliquer des restrictions par IP ou de % de trafic.
 
 la définition des features pré-embarquéesse fait au travers d'un fichier :
 
 ```
 {
   feature_A: "variant_A",
-  feature_B: { variant: "variant_B", rampedUp: 0.05, ipList: [ "192.168.0.5",  ] }
+  feature_B: { variant: "variant_B", rampedUp: 0.05, ipList: [ "192.168.0.5" ] }
 }
 ```
 
@@ -58,7 +58,8 @@ setup features par défaut
 
 ```js
 const { Features } = require('afrostream-node-feature');
-const features = new Features({
+const features = new Features();
+features.load({
   'feature': 'variant',
   'afrostream-back-end.config': '{"billings":{"url":"https://billings-api-pr440.herokuapp.com"}}'
 });
