@@ -41,7 +41,7 @@ class Features {
   isEnabled(key) {
     assert(typeof key === 'string');
 
-    this.logger.info('isEnabled(' + key + ') ?');
+    //this.logger.info('isEnabled(' + key + ') ?');
     if (typeof this.features[key] === "undefined") {
       this.logger.warn('[WARNING]: unknown feature ' + key);
       return false;
@@ -52,18 +52,18 @@ class Features {
       variant === "false" ||
       variant === "off"
     );
-    this.logger.info('isEnabled(' + key + ') ='+enabled);
-    if (enabled && this.features[key].rampedUp) {
-      assert(this.features[key].rampedUp === 'number');
+    //this.logger.info('isEnabled(' + key + ') ='+enabled);
+    if (enabled && typeof this.features[key].rampedUp !== 'undefined') {
+      assert(typeof this.features[key].rampedUp === 'number');
       enabled = (Math.random() < this.features[key].rampedUp);
-      this.logger.info('isEnabled(' + key + ') rampedUp ='+enabled);
+      //this.logger.info('isEnabled(' + key + ') rampedUp ='+enabled);
     }
     if (enabled && Array.isArray(this.features[key].ipList) && this.context.req) {
       const userIp = (this.context.req.userIp || this.context.req.ip);
       enabled = this.features[key].ipList.some(ip => userIp.match(ip));
-      this.logger.info('isEnabled(' + key + ') rampedUp ='+enabled);
+      this.logger.info('isEnabled(' + key + ') ip ='+enabled);
     }
-    this.logger.info('isEnabled(' + key + ') ='+enabled);
+    //this.logger.info('isEnabled(' + key + ') ='+enabled);
     return enabled;
   }
 
@@ -113,6 +113,8 @@ const middleware = function(options) {
       });
       if (options.features instanceof Features) {
         req.features.load(options.features.features);
+      } else if (options.features) {
+        req.features.load(options.features);
       }
       req.features.load(reqFeatures);
     } catch (e) {
