@@ -40,8 +40,10 @@ https://(...)/route?feature=variant
 
 ### headers
 
+les features peuvent être passés dans les headers sous forme d'une chaine contenant les features sérialisées en json
+
 ```
-Features: feature=variant&toto=titi&...
+Features: {"foo":"on","bar":"off"}
 ```
 
 ## Une feature
